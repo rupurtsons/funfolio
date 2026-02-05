@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shhhhh dont look</title>
+  <canvas id="canvas"></canvas>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    @font-face {
+      font-family: "alte-haas-grotesk-bold";
+      src: url("alte-haas-grotesk.bold.ttf");
+    }
+
+    @font-face {
+      font-family: "alte-haas-grotesk";
+      src: url("alte-haas-grotesk.regular.ttf");
+    }
+  </style>
+</head>
+
+<body>
+
+      <div class="box intlayone" data-word="Jewelry" data-link="jewelry.html">
+      <span class="imgWrap">
+        <img src="img/jewelry/jewl11.jpeg" alt="ring11">
+      </span>
+    </div>
+
+      <div class="box intlayone" data-word="MR SIPPY" data-link="mrsippy.html">
+      <span class="imgWrap">
+        <img src="img/mrsippy/mr1.jpg" alt="mr1">
+      </span>
+    </div>
+
+      <div class="box intlayone" data-word="GIN" data-link="gin.html">
+      <span class="imgWrap">
+        <img src="img/gin/Gin1.jpg" alt="Gin1">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="SCRIBBLES ON THE TABLE" data-link="scribbles.html">
+      <span class="imgWrap">
+        <img src="img/scribble/scribblecover.jpg" alt="scribblecover">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="CLOVE" data-link="clove.html">
+      <span class="imgWrap">
+        <img src="img/clove/clovercover.jpg" alt="clovercover">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="口 CHAIR" data-link="kochair.html">
+      <span class="imgWrap">
+        <img src="img/boxchair/boxcover.jpg" alt="boxcover">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="QUITAPESARES ROSARIES" data-link="pen.html">
+      <span class="imgWrap">
+        <img src="img/pen/pen1.jpg" alt="pen1">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="STEEL HANGERS" data-link="hanger.html">
+      <span class="imgWrap">
+        <img src="img/hanger/hanger1.jpg" alt="hanger1">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="1956 HOLLOW OAK LANE" data-link="bfathesis.html">
+      <span class="imgWrap">
+        <img src="img/bfathesis/1956 HOLLOW OAK LANE_Page_01.jpg" alt="thesis1">
+      </span>
+    </div>
+
+  <div class="box intlayone" data-word="[TV] STAND" data-link="tvstand.html">
+      <span class="imgWrap">
+        <img src="img/stand/standcover.jpg" alt="standcover">
+    </span>
+
+  </div>
+    <div class="box intlayone" data-word="品 TABLE" data-link="pingtable.html">
+      <span class="imgWrap">
+        <img src="img/kotable/ko1.jpg" alt="ko1">
+      </span>
+    </div>
+
+    <div class="box intlayone" data-word="品 STOOL" data-link="pingstool.html">
+      <span class="imgWrap">
+        <img src="img/kostool/stool1.jpg" alt="stool1">
+    </span>
+  </div>
+
+    <div class="box intlayone" data-word="Ponytail" data-link="tiny.html">
+      <span class="imgWrap">
+        <img src="img/pants/tiny2.jpg" alt="tiny2" >
+    </span>
+  </div>
+      
+    <div class="box intlayone" data-word="& he brought me a bouquet of branches tied together with his curly hair" data-link="hair.html">
+      <span class="imgWrap">
+        <img src="img/hair/haircover.jpg" alt="haircover" >
+      </span>
+    </div>
+
+    <div class="box intlayone" data-word="CUBISON" data-link="box.html">
+      <span class="imgWrap">
+        <img src="img/box/boxcover.jpg" alt="boxcover" width="100">
+      </span>
+    </div>
+
+
+<button id="aboutBtn" class="controlBtn" data-link="about.html">ABOUT</button>
+<button id="resetLayout" class="controlBtn">STOP IT</button>
+
+
+
+    <div id="modalOverlay" class="modalOverlay" aria-hidden="true">
+  <div class="modalWindow" role="dialog" aria-modal="true">
+    <button id="modalClose" class="modalClose" aria-label="Close">×</button>
+    <iframe id="modalFrame" class="modalFrame" src=""></iframe>
+  </div>
+</div>
+
+<div class="box7">
+<button id="stopRecord" class="controlBtn">ok message over</button> <br> 
+<button id="startRecord" class="controlBtn">leave me a message!</button>
+  <video id="videoElement" autoplay class="box7"></video></div>
+
+<script>
+  const video = document.querySelector("#videoElement");
+  const startBtn = document.querySelector("#startRecord");
+  const stopBtn = document.querySelector("#stopRecord");
+
+  let mediaRecorder;
+  let recordedChunks = [];
+
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      video.srcObject = stream;
+
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm"
+      });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "recording.webm";
+        document.body.appendChild(a);
+        a.click();
+
+        URL.revokeObjectURL(url);
+        recordedChunks = [];
+      };
+    })
+
+    .catch(err => {
+      console.error("Camera error:", err);
+    });
+
+  startBtn.addEventListener("click", () => {
+    if (mediaRecorder && mediaRecorder.state === "inactive") {
+      mediaRecorder.start();
+      console.log("Recording started");
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop();
+      console.log("Recording stopped");
+    }
+  });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("rupurtson");
+</script>
+<script src="spread.js"></script>
+</body>
+</html>
